@@ -4,6 +4,8 @@ from PyPDF2 import PdfFileWriter, PdfFileReader, pdf
 from reportlab.pdfgen import canvas
 from reportlab.lib.colors import Color
 
+from .constants import BASE_URL
+
 
 def _create_whitemark(width: int, height: int, alpha: float):
     PATH = '.watermark.pdf'
@@ -50,6 +52,9 @@ class BetweenPageStrategy(PageStrategy):
                 transparent_page.mergePage(whitemark)
                 pdf_output.addPage(transparent_page)
 
+    def toUrl(self):
+        return f'{BASE_URL}/between-page/{self.nb_pages}/{self.alpha}'
+
 
 class EndOfFilePageStrategy(PageStrategy):
     def __init__(self, nb_pages: int):
@@ -73,3 +78,6 @@ class EndOfFilePageStrategy(PageStrategy):
             blank_page = pdf.PageObject.createBlankPage(
                 width=width, height=height)
             pdf_output.addPage(blank_page)
+
+    def toUrl(self):
+        return f'{BASE_URL}/end-of-file/{self.nb_pages}'

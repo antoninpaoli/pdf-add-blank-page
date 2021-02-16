@@ -1,6 +1,6 @@
 import argparse
 
-from .core import add_blank_page
+from .core import add_blank_page_remotely, add_blank_page
 from .strategies import EndOfFilePageStrategy, BetweenPageStrategy
 
 
@@ -16,4 +16,4 @@ def cli():
     strategy = BetweenPageStrategy(args.nb_pages, args.alpha)
     if args.end_of_file:
         strategy = EndOfFilePageStrategy(args.nb_pages)
-    add_blank_page(args.pdf_input, strategy, args.pdf_output)
+    add_blank_page_remotely(args.pdf_input, strategy, args.pdf_output)
