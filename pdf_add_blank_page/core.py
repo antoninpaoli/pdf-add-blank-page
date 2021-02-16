@@ -10,7 +10,7 @@ from .strategies import BetweenPageStrategy, EndOfFilePageStrategy
 from .constants import BASE_URL
 
 
-def add_blank_page(file_path: str | BytesIO, strategy: BetweenPageStrategy | EndOfFilePageStrategy, output_path: str | BytesIO = None):
+def add_blank_page(file_path: str, strategy: BetweenPageStrategy | EndOfFilePageStrategy, output_path: str=None):
     """Add blank pages at selected positions
 
     Args:
