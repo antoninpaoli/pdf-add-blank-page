@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify
 from flask.helpers import send_file
 from io import BytesIO
 
-from .strategies import BetweenPageStrategy
+from .strategies import EndOfFilePageStrategy, BetweenPageStrategy
 from .core import add_blank_page
 
 ALLOWED_EXTENSIONS = {'pdf'}
@@ -31,6 +31,27 @@ def add_blank_page_server(nb_pages, alpha):
     try:
         add_blank_page(input_file, BetweenPageStrategy(
             nb_pages, alpha), output_file)
+    except Exception as e:
+        return jsonify({'error': str(e)})
+    output_file.seek(0)
+    return send_file(output_file, 'application/pdf')
+
+
+@app.route('/end-of-file/<nb_pages>', methods=['POST'])
+def add_blank_page_server(nb_pages):
+    try:
+        nb_pages = int(nb_pages)
+    except ValueError:
+        return jsonify({'error': 'invalid type for parameters /end-of-file/<nb_pages:int>'})
+    print(request.files)
+    if 'file' not in request.files:
+        return jsonify({'error': 'no file part'})
+    [input_file, *_] = request.files.getlist('file')
+    input_file = BytesIO(input_file.read())
+    output_file = BytesIO()
+    try:
+        add_blank_page(input_file, EndOfFilePageStrategy(
+            nb_pages), output_file)
     except Exception as e:
         return jsonify({'error': str(e)})
     output_file.seek(0)

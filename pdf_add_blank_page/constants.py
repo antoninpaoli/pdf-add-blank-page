@@ -1,1 +1,1 @@
-BASE_URL = 'http://localhost:5000'
+BASE_URL = 'https://mysterious-mountain-23216.herokuapp.com/'
