@@ -1,3 +1,4 @@
 reportlab==3.5.59
 PyPDF2==1.26.0
 PyQt5==5.15.2
+requests

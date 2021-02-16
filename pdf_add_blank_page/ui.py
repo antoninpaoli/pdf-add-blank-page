@@ -1,7 +1,8 @@
 from PyQt5.QtWidgets import QMainWindow, QApplication, QLabel, QWidget, QVBoxLayout, QHBoxLayout, QSpinBox, QRadioButton, QCheckBox, QPushButton
 from PyQt5.QtCore import Qt
-from .core import add_blank_page
+from .core import add_blank_page_remotely, add_blank_page
 from .strategies import EndOfFilePageStrategy, BetweenPageStrategy
+from .constants import COMPUTE_REMOTLY, IS_WINDOBE
 
 import sys
 import os
@@ -58,6 +59,7 @@ class MyApp(QWidget):
         layoutSB = QVBoxLayout()
         layoutSB.addWidget(QLabel('Nombre de pages blanche :'))
         self.nbBlankPage = QSpinBox()
+        self.nbBlankPage.setValue(3)
         layoutSB.addWidget(self.nbBlankPage)
         return layoutSB
 
@@ -78,11 +80,24 @@ class MyApp(QWidget):
         return self.button
 
     def btnstate(self):
-        if(self.EndOfFilePageStrategy.isChecked()):
-            strategy = BetweenPageStrategy(int(self.nbBlankPage.text()), 0.7)
-        else:
+        if self.EndOfFilePageStrategy.isChecked():
             strategy = EndOfFilePageStrategy(int(self.nbBlankPage.text()))
-        add_blank_page(self.file.text().replace('file:///', ''), strategy)
+        else:
+            if self.isTransparent.isChecked():
+                transparency = 0.7
+            else:
+                transparency = 1
+            strategy = BetweenPageStrategy(int(self.nbBlankPage.text()), transparency)
+
+        if IS_WINDOBE:
+            filePath = self.file.text().replace('file:///', '')
+        else:
+            filePath = self.file.text().replace('file://', '')
+
+        launcher = add_blank_page_remotely if COMPUTE_REMOTLY else add_blank_page
+        QApplication.setOverrideCursor(Qt.WaitCursor)
+        launcher(filePath, strategy)
+        QApplication.restoreOverrideCursor()
 
 
 def ui():
