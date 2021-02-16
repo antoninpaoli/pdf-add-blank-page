@@ -16,7 +16,7 @@ def allowed_file(filename):
 
 
 @app.route('/between-page/<nb_pages>/<alpha>', methods=['POST'])
-def add_blank_page_server(nb_pages, alpha):
+def add_between_page(nb_pages, alpha):
     try:
         nb_pages = int(nb_pages)
         alpha = float(alpha)
@@ -38,7 +38,7 @@ def add_blank_page_server(nb_pages, alpha):
 
 
 @app.route('/end-of-file/<nb_pages>', methods=['POST'])
-def add_blank_page_server(nb_pages):
+def add_end_of_file(nb_pages):
     try:
         nb_pages = int(nb_pages)
     except ValueError:
